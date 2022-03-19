@@ -7,13 +7,6 @@ const logger = {
     }
 }
 
-const ENUM = {
-    TO_DELETE_TYPES: {
-        FILE: 'file',
-        FOLDER: 'folder'
-    }
-}
-
 const initialStats = {
     success: {
         total: 0,
@@ -29,11 +22,8 @@ class FindNRemove {
     arguments
 
     to_delete_name
-    to_delete_type
     to_delete_path
     is_recursive
-
-    deleted_count = 0
 
     stats = {...initialStats}
 
@@ -43,7 +33,6 @@ class FindNRemove {
 
     init() {
         this._setToDeleteName()
-        this._setToDeleteType()
         this._setToDeletePath()
         this._setIsRecursive()
     }
@@ -143,18 +132,6 @@ class FindNRemove {
         if (!fs.existsSync(this.to_delete_path)) throw new Error('No such folder ' + this.to_delete_path)
 
         logger.log('Will delete in:', this.to_delete_path)
-    }
-
-    _setToDeleteType() {
-        const isFile = this.to_delete_name.split('.').length > 1
-
-        if (isFile) {
-            this.to_delete_type = ENUM.TO_DELETE_TYPES.FILE
-        } else {
-            this.to_delete_type = ENUM.TO_DELETE_TYPES.FOLDER
-        }
-
-        logger.log('To delete type:', this.to_delete_type)
     }
 }
 
