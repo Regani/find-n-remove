@@ -14,6 +14,17 @@ const ENUM = {
     }
 }
 
+const initialStats = {
+    success: {
+        total: 0,
+        list: []
+    },
+    errored: {
+        total: 0,
+        list: []
+    }
+}
+
 class FindNRemove {
     arguments
 
@@ -23,6 +34,8 @@ class FindNRemove {
     is_recursive
 
     deleted_count = 0
+
+    stats = {...initialStats}
 
     constructor(args) {
         this.arguments = args
@@ -36,28 +49,46 @@ class FindNRemove {
     }
 
     proceed() {
-        this.delete(this.to_delete_path)
-        logger.log('Successfully deleted', this.deleted_count, 'items')
-        this.deleted_count = 0
+        this.delete()
+        logger.log('Finished', this.stats)
+        this.stats = {...initialStats}
     }
 
-    delete(directoryPath) {
-        const toDelete = path.join(directoryPath, this.to_delete_name)
+    delete() {
+        const recursiveDelete = (directoryPath) => {
+            const toDelete = path.join(directoryPath, this.to_delete_name)
+            logger.log('Will delete', toDelete)
 
-        if (fs.existsSync(toDelete)) {
-            logger.log('Deleting:', toDelete)
-            fs.rmSync(toDelete, {force: true, recursive: true})
-            this.deleted_count++
+            if (fs.existsSync(toDelete)) {
+                logger.log('Deleting:', toDelete)
+                fs.rmSync(toDelete, {force: true, recursive: true})
+                this.stats.success.total++
+                this.stats.success.list.push(toDelete)
+            }
+
+            if (this.is_recursive) {
+                fs.readdirSync(directoryPath).forEach((file, index) => {
+                    const curPath = path.join(directoryPath, file)
+
+                    if (fs.lstatSync(curPath).isDirectory()) {
+                        try {
+                            recursiveDelete(curPath)
+                        } catch (e) {
+                            logger.log('Something went wrong')
+                            this.stats.errored.total++
+                            this.stats.errored.list.push(curPath)
+                        }
+                    }
+                })
+            }
         }
 
-        if (this.is_recursive) {
-            fs.readdirSync(directoryPath).forEach((file) => {
-                const curPath = path.join(directoryPath, file)
-
-                if (fs.lstatSync(curPath).isDirectory()) {
-                    this.delete(curPath);
-                }
-            })
+        try {
+            recursiveDelete(this.to_delete_path)
+        } catch (e) {
+            logger.log('Something went wrong')
+            this.stats.errored.total++
+            this.stats.errored.list.push(path)
         }
     }
 
