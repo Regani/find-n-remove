@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "find-n-remove is a Node script for deleting files or folders in a folder",
   "main": "main.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
