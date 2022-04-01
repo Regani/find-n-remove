@@ -17,7 +17,7 @@ cd find-n-remove
 Run in your terminal as sudo:
 
 ```bash
-node script.js -r --name=file_to_delete ./
+node main.js -r --name=file_to_delete ./
 ```
 
 ## Arguments

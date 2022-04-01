@@ -1,0 +1,19 @@
+{
+  "name": "find-n-remove",
+  "version": "1.0.0",
+  "description": "find-n-remove is a Node script for deleting files or folders in a folder",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Regani/find-n-remove.git"
+  },
+  "author": "Bohdan Konechnyi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Regani/find-n-remove/issues"
+  },
+  "homepage": "https://github.com/Regani/find-n-remove#readme"
+}
